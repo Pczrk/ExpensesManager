@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class MemberDto {
+public class UserDto {
     private Long userId;
-    private Long crewId;
-    private String nickname;
+    private String username;
+    private String mail;
+    private String hashedPassword;
 }

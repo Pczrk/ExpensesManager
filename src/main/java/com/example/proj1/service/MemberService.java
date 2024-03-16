@@ -19,18 +19,19 @@ public class MemberService {
     public List<MemberDto> getAll() {
         return memberRepository.findAll().stream()
                 .map(c -> MemberDto.builder()
-                        .id(c.getId())
-                        .username(c.getUsername())
+                        .userId(c.getUserId())
+                        .crewId(c.getCrewId())
                         .nickname(c.getNickname())
                         .build())
                 .collect(Collectors.toList());
     }
 
-    public long addMember(MemberDto member) {
+    /*public long addMember(MemberDto member) {
         Member m = Member.builder()
-                .username(member.getUsername())
+                .userId(member.getUserId())
+                .crewId(member.getCrewId())
                 .nickname(member.getNickname())
                 .build();
         return memberRepository.save(m).getId();
-    }
+    }*/
 }

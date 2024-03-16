@@ -1,16 +1,14 @@
 package com.example.proj1.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Data
-public class MemberDto {
-    private Long userId;
-    private Long crewId;
-    private String nickname;
+public class UserResponse {
+    private List<UserDto> users;
 }

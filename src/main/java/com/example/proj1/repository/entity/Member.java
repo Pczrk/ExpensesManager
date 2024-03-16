@@ -1,5 +1,6 @@
 package com.example.proj1.repository.entity;
 
+import com.example.proj1.repository.entity.id.MemberId;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,15 +10,16 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@IdClass(MemberId.class)
 @Table(name = "members")
 public class Member {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
-    private Long id;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
-    @Column(name = "username")
-    private String username;
+    @Id
+    @Column(name = "crew_id", nullable = false)
+    private Long crewId;
 
     @Column(name = "nickname")
     private String nickname;

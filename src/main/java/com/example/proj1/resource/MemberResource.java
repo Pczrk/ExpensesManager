@@ -28,7 +28,7 @@ public class MemberResource {
         return ResponseEntity.ok(new MemberResponse(members));
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    /*@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addMember(@RequestBody MemberRequest request){
 
         long id = memberService.addMember(request.getMember());
@@ -37,6 +37,6 @@ public class MemberResource {
                 .toUri();
 
         return ResponseEntity.created(location).build();
-    }
+    }*/
 
 }
