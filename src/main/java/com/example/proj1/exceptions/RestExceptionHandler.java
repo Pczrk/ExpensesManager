@@ -16,12 +16,32 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({UserCoreException.class})
-    protected ResponseEntity<UserExceptionEntity> handleUserCoreException(UserCoreException e){
+    protected ResponseEntity<ExceptionEntity> handleUserCoreException(UserCoreException e){
         return ResponseEntity.status(e.getErrorStatus()).body(e.buildEntity());
     }
 
     @ExceptionHandler({AuthenticationCoreException.class})
-    protected ResponseEntity<AuthenticationExceptionEntity> handleUserCoreException(AuthenticationCoreException e){
+    protected ResponseEntity<ExceptionEntity> handleAuthenticationCoreException(AuthenticationCoreException e){
+        return ResponseEntity.status(e.getErrorStatus()).body(e.buildEntity());
+    }
+
+    @ExceptionHandler({CrewCoreException.class})
+    protected ResponseEntity<ExceptionEntity> handleCrewCoreException(CrewCoreException e){
+        return ResponseEntity.status(e.getErrorStatus()).body(e.buildEntity());
+    }
+
+    @ExceptionHandler({NullArgumentException.class})
+    protected ResponseEntity<ExceptionEntity> handleNullArgumentException(NullArgumentException e){
+        return ResponseEntity.status(e.getErrorStatus()).body(e.buildEntity());
+    }
+
+    @ExceptionHandler({MemberCoreException.class})
+    protected ResponseEntity<ExceptionEntity> handleMemberCoreException(MemberCoreException e){
+        return ResponseEntity.status(e.getErrorStatus()).body(e.buildEntity());
+    }
+
+    @ExceptionHandler({TripCoreException.class})
+    protected ResponseEntity<ExceptionEntity> handleTripCoreException(TripCoreException e){
         return ResponseEntity.status(e.getErrorStatus()).body(e.buildEntity());
     }
 

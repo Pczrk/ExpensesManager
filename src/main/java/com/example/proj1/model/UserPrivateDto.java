@@ -1,13 +1,16 @@
 package com.example.proj1.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequest {
-    private UserLoginDto userLogin;
-    private UserRegisterDto userRegister;
+@Builder
+@Data
+public class UserPrivateDto {
+    private Long userId;
+    private String username;
+    private String mail;
 }

@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserExceptionEntity {
+public class ExceptionEntity {
 
     private HttpStatus errorStatus;
     private String message;

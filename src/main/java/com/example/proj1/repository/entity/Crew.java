@@ -1,12 +1,17 @@
 package com.example.proj1.repository.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "crews")
 public class Crew {
     @Id
@@ -20,5 +25,11 @@ public class Crew {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "leader", nullable = false)
     private User leader;
+
+    @Column(name = "access_key", nullable = false, length = 8)
+    private String accessKey;
+
+    @OneToMany(mappedBy = "crew")
+    private Set<Member> members = new LinkedHashSet<>();
 
 }

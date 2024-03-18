@@ -1,7 +1,6 @@
 package com.example.proj1.service;
 
 import com.example.proj1.exceptions.AuthenticationCoreException;
-import com.example.proj1.model.UserDto;
 import com.example.proj1.repository.SessionRepository;
 import com.example.proj1.repository.UserRepository;
 import com.example.proj1.repository.entity.User;
@@ -30,7 +29,7 @@ public class AuthenticationService {
     public String generateSessionId() {
         byte[] randomBytes = new byte[32];
         secureRandom.nextBytes(randomBytes);
-        String sessionId = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes).substring(0, 32);
+        String sessionId = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes).substring(0,32);
         return sessionRepository.existsById(sessionId) ? generateSessionId():sessionId;
     }
 
@@ -73,18 +72,15 @@ public class AuthenticationService {
         }
         sessionRepository.delete(s.get());
     }
-  /*  public UserDto validateSession(String sessionId){
+
+    public Long validateSession(String sessionId){
         if (sessionId == null)
             throw new AuthenticationCoreException(FORBIDDEN,"User is not logged-in or session expired");
 
-        Optional<UserDto> s = sessionRepository.findById(sessionId).map(session -> UserDto.builder()
-                .userId(session.getUser().getUserId())
+        Optional<Session> s = sessionRepository.findById(sessionId);
 
-                .build());
-
-        if (s.isEmpty())
+        if (s.isEmpty() || s.get().getExpirationDate().isBefore(Instant.now()))
             throw new AuthenticationCoreException(FORBIDDEN,"User is not logged-in or session expired");
-
-        return ;
-    }*/
+        return s.get().getUser().getUserId();
+    }
 }

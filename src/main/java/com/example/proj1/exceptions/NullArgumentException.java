@@ -1,16 +1,14 @@
 package com.example.proj1.exceptions;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@AllArgsConstructor
-public class UserCoreException extends RuntimeException{
-    private final HttpStatus errorStatus;
-    private String message;
+@NoArgsConstructor
+public class NullArgumentException extends IllegalArgumentException{
+    private final HttpStatus errorStatus = HttpStatus.BAD_REQUEST;
+    private final String message = "At least one of the attributes is null";
 
     public ExceptionEntity buildEntity(){
         return ExceptionEntity.builder()
@@ -18,5 +16,4 @@ public class UserCoreException extends RuntimeException{
                 .message(this.message)
                 .build();
     }
-
 }

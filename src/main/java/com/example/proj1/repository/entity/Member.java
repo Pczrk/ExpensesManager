@@ -1,26 +1,31 @@
 package com.example.proj1.repository.entity;
 
-import com.example.proj1.repository.entity.id.MemberId;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Setter
 @Getter
+@Setter
 @Entity
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@IdClass(MemberId.class)
+@AllArgsConstructor
+
 @Table(name = "members")
 public class Member {
-    @Id
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @EmbeddedId
+    private MemberId id;
 
-    @Id
-    @Column(name = "crew_id", nullable = false)
-    private Long crewId;
+    @MapsId("userId")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(name = "nickname")
+    @MapsId("crewId")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "crew_id", nullable = false)
+    private Crew crew;
+
+    @Column(name = "nickname", length = 30)
     private String nickname;
+
 }

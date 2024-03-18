@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public class UserCoreException extends RuntimeException{
+public class TripCoreException extends RuntimeException{
     private final HttpStatus errorStatus;
     private String message;
 

@@ -1,7 +1,6 @@
 package com.example.proj1.resource;
 
-import com.example.proj1.model.UserLoginRequest;
-import com.example.proj1.model.UserRegisterRequest;
+import com.example.proj1.model.UserRequest;
 import com.example.proj1.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ public class UserResource {
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> register(
             @CookieValue(value = "Auth", required = false) String sessionId,
-            @RequestBody UserRegisterRequest request,
+            @RequestBody UserRequest request,
             HttpServletResponse response){
 
         authenticationService.noActiveSessionAssertion(sessionId);
@@ -43,7 +42,7 @@ public class UserResource {
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> login(
             @CookieValue(value = "Auth", required = false) String sessionId,
-            @RequestBody UserLoginRequest request,
+            @RequestBody UserRequest request,
             HttpServletResponse response){
 
         authenticationService.noActiveSessionAssertion(sessionId);
@@ -58,5 +57,14 @@ public class UserResource {
             @CookieValue(value = "Auth", required = false) String sessionId){
         authenticationService.removeCurrentSession(sessionId);
         return ResponseEntity.ok("Successfully logged out");
+    }
+
+    @GetMapping(value = "/account")
+    public ResponseEntity<Object> account(
+            @CookieValue(value = "Auth", required = false) String sessionId){
+
+        long userId = authenticationService.validateSession(sessionId);
+
+        return ResponseEntity.ok(userService.getUserById(userId));
     }
 }
