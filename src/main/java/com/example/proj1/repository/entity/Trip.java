@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,7 +24,13 @@ public class Trip {
     @JoinColumn(name = "crew_id", nullable = false)
     private Crew crew;
 
+    @Column(name = "name", nullable = false, length = 30)
+    private String name;
+
     @Column(name = "trip_date")
     private LocalDate tripDate;
+
+    @OneToMany(mappedBy = "trip")
+    private Set<Expense> expenses = new LinkedHashSet<>();
 
 }

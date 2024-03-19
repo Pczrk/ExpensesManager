@@ -13,9 +13,8 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, MemberId> {
-    Optional<Member> getMemberByUserAndCrew(User user, Crew crew);
-
+    Optional<Member> findMemberByUserAndCrew(User user, Crew crew);
     @Query(value = "select * from members m where m.user_id = :user_id and m.crew_id = :crew_id",nativeQuery = true)
-    Optional<Member> getMemberByUserIdAndCrewId(@Param("user_id") Long userId,
-                                                @Param("crew_id") Long crewId);
+    Optional<Member> findMemberByUserIdAndCrewId(@Param("user_id") Long userId,
+                                                 @Param("crew_id") Long crewId);
 }

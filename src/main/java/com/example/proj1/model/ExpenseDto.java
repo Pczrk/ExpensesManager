@@ -5,15 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TripDto {
+@Builder
+public class ExpenseDto {
+    private Long expenseId;
     private Long tripId;
-    private Long crewId;
+    private BigDecimal value;
     private String name;
-    private LocalDate tripDate;
+    private String description;
+    private Long payedBy;
 }

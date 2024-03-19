@@ -2,7 +2,6 @@ package com.example.proj1.service;
 
 import com.example.proj1.exceptions.AuthenticationCoreException;
 import com.example.proj1.repository.SessionRepository;
-import com.example.proj1.repository.UserRepository;
 import com.example.proj1.repository.entity.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,31 +20,30 @@ import static org.springframework.http.HttpStatus.*;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
+public class SessionService {
 
     private final SessionRepository sessionRepository;
-    private final UserRepository userRepository;
+
     private final SecureRandom secureRandom;
-    public String generateSessionId() {
+    private final UserService userService;
+
+    private String generateSessionId() {
         byte[] randomBytes = new byte[32];
         secureRandom.nextBytes(randomBytes);
         String sessionId = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes).substring(0,32);
         return sessionRepository.existsById(sessionId) ? generateSessionId():sessionId;
     }
 
-    public void createSession(long id, HttpServletResponse response) {
+    public void createSession(Long userId, HttpServletResponse response) {
+        User user = userService.getUserEntity(userId);
 
-        Optional<User> u = userRepository.findByUserId(id);
-        if (u.isEmpty())
-            throw new AuthenticationCoreException(CONFLICT,"Can't create session, provided user doesn't exists");
-
-        Session s = sessionRepository.save(Session.builder()
+        Session session = sessionRepository.save(Session.builder()
                     .sessionId(generateSessionId())
-                    .user(u.get())
+                    .user(user)
                     .expirationDate(Instant.now().plus(Duration.ofMinutes(30)))
                 .build());
 
-        Cookie authCookie = new Cookie("Auth",s.getSessionId());
+        Cookie authCookie = new Cookie("Auth",session.getSessionId());
         authCookie.setPath("/");
         authCookie.setMaxAge(1800);
 

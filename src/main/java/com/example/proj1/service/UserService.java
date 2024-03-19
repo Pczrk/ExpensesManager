@@ -19,7 +19,27 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+
     private final PasswordHashingService passwordHashingService;
+
+    /**
+     * Returns User entity given userId, userId must be current logged-in user
+     * @param userId - id of a currently logged-in user
+     * @return User entity
+     */
+    protected User getAuthenticatedUserEntity(Long userId){
+        Optional<User> user = userRepository.findByUserId(userId);
+        if(user.isEmpty())
+            throw new UserCoreException(HttpStatus.NOT_FOUND,"Logged in user can't be found in database");
+        return user.get();
+    }
+
+    protected User getUserEntity(Long userId){
+        Optional<User> user = userRepository.findByUserId(userId);
+        if(user.isEmpty())
+            throw new UserCoreException(HttpStatus.NOT_FOUND,"User with given userId not found in database");
+        return user.get();
+    }
 
     public long registerUser(UserRegisterDto userRegister) {
         if (userRegister == null || userRegister.getUsername() == null || userRegister.getMail() == null || userRegister.getPassword() == null || userRegister.getPasswordAgain() == null)
@@ -31,6 +51,8 @@ public class UserService {
             throw new UserCoreException(HttpStatus.CONFLICT,"User with given mail already exists.");
         //TODO MAIL REGEX
         //TODO USERNAME check
+        if (userRepository.existsByUsername(userRegister.getUsername()))
+            throw new UserCoreException(HttpStatus.CONFLICT,"User with given username already exists");
 
         User u = userRepository.save(User.builder()
                 .username(userRegister.getUsername())

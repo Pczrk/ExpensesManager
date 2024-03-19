@@ -10,11 +10,11 @@ public class PasswordHashingService {
 
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public String hashPassword(String password) {
+    protected String hashPassword(String password) {
         return passwordEncoder.encode(password);
     }
 
-    public boolean verifyPassword(String rawPassword, String encodedPassword) {
+    protected boolean verifyPassword(String rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 }

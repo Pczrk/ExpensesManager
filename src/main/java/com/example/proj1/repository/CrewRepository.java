@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface CrewRepository extends JpaRepository<Crew, Long> {
     boolean existsByAccessKey(String accessKey);
     Optional<Crew> findCrewByCrewId(Long crewId);
+    boolean existsByName(String name);
     Optional<Crew> findCrewByAccessKey(String accessKey);
     @Query(value = "select c.* from crews c join members m on c.crew_id = m.crew_id where m.user_id = :user_id",nativeQuery = true)
     List<Crew> findAllByUserId(@Param("user_id") Long userId);

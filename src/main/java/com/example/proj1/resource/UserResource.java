@@ -1,7 +1,7 @@
 package com.example.proj1.resource;
 
 import com.example.proj1.model.UserRequest;
-import com.example.proj1.service.AuthenticationService;
+import com.example.proj1.service.SessionService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -18,7 +18,7 @@ import java.net.URI;
 public class UserResource {
 
     private final UserService userService;
-    private final AuthenticationService authenticationService;
+    private final SessionService sessionService;
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> register(
@@ -26,13 +26,13 @@ public class UserResource {
             @RequestBody UserRequest request,
             HttpServletResponse response){
 
-        authenticationService.noActiveSessionAssertion(sessionId);
+        sessionService.noActiveSessionAssertion(sessionId);
         long id = userService.registerUser(request.getUserRegister());
-        authenticationService.createSession(id, response);
+        sessionService.createSession(id, response);
 
         URI location = ServletUriComponentsBuilder
-                .fromPath("/users")
-                .path("/{id}")
+                .fromCurrentContextPath()
+                .path("/user/{id}")
                 .buildAndExpand(id)
                 .toUri();
 
@@ -45,9 +45,9 @@ public class UserResource {
             @RequestBody UserRequest request,
             HttpServletResponse response){
 
-        authenticationService.noActiveSessionAssertion(sessionId);
+        sessionService.noActiveSessionAssertion(sessionId);
         long id = userService.loginUser(request.getUserLogin());
-        authenticationService.createSession(id, response);
+        sessionService.createSession(id, response);
 
         return ResponseEntity.ok("Successfully logged in");
     }
@@ -55,7 +55,7 @@ public class UserResource {
     @DeleteMapping(value = "/logout")
     public ResponseEntity<Object> logout(
             @CookieValue(value = "Auth", required = false) String sessionId){
-        authenticationService.removeCurrentSession(sessionId);
+        sessionService.removeCurrentSession(sessionId);
         return ResponseEntity.ok("Successfully logged out");
     }
 
@@ -63,8 +63,10 @@ public class UserResource {
     public ResponseEntity<Object> account(
             @CookieValue(value = "Auth", required = false) String sessionId){
 
-        long userId = authenticationService.validateSession(sessionId);
+        long userId = sessionService.validateSession(sessionId);
 
         return ResponseEntity.ok(userService.getUserById(userId));
     }
+
+    //TODO @GetMapping(value = "/{id}")
 }

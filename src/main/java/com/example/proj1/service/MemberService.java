@@ -1,37 +1,43 @@
 package com.example.proj1.service;
 
-import com.example.proj1.model.MemberDto;
+import com.example.proj1.exceptions.CrewCoreException;
 import com.example.proj1.repository.MemberRepository;
+import com.example.proj1.repository.entity.Crew;
 import com.example.proj1.repository.entity.Member;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.proj1.repository.entity.MemberId;
+import com.example.proj1.repository.entity.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-@AllArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class MemberService {
-
     private final MemberRepository memberRepository;
-    public List<MemberDto> getAll() {
-        return memberRepository.findAll().stream()
-                .map(c -> MemberDto.builder()
-                        .userId(c.getUserId())
-                        .crewId(c.getCrewId())
-                        .nickname(c.getNickname())
+
+    protected void createMemberEntity(User user, Crew crew){
+        memberRepository.save(Member.builder()
+                .id(MemberId.builder()
+                        .crewId(crew.getCrewId())
+                        .userId(user.getUserId())
                         .build())
-                .collect(Collectors.toList());
+                .crew(crew)
+                .user(user)
+                .build());
     }
 
-    /*public long addMember(MemberDto member) {
-        Member m = Member.builder()
-                .userId(member.getUserId())
-                .crewId(member.getCrewId())
-                .nickname(member.getNickname())
-                .build();
-        return memberRepository.save(m).getId();
-    }*/
+    protected void assertUserIsMember(Long userId, Long crewId){
+        Optional<Member> m = memberRepository.findMemberByUserIdAndCrewId(userId,crewId);
+        if (m.isEmpty())
+            throw new CrewCoreException(HttpStatus.UNAUTHORIZED,"User unauthorized to access crew information");
+    }
+
+    protected void assertUserIsNotMember(User user, Crew crew){
+        Optional<Member> m = memberRepository.findMemberByUserAndCrew(user, crew);
+        if (m.isPresent())
+            throw new CrewCoreException(HttpStatus.CONFLICT,"User is already member of this crew");
+    }
+
 }
